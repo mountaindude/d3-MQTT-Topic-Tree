@@ -5,9 +5,14 @@
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
     <link type="text/css" rel="stylesheet" href="topic-tree.css">
     <link type="text/css" rel="stylesheet" href="style.css"/>
+
+    <!-- <script src="https://d3js.org/d3.v5.min.js"></script> -->
     <script type="text/javascript" src="d3/d3.js"></script>
     <script type="text/javascript" src="d3/d3.layout.js"></script>
-    <script type="text/javascript" src="mqttws31.js"></script>
+
+    <!-- <script type="text/javascript" src="mqttws31.js"></script> -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.js"></script>
+
     <script type="text/javascript" src="topic-tree.js"></script>
   </head>
   <body>
@@ -20,8 +25,10 @@
     <script type="text/javascript">
 
 var options = {
-  host: location.hostname,
-  port: parseInt(location.port),
+  // host: location.hostname,
+  // port: parseInt(location.port),
+  host: '<enter your IP>',
+  port: 9002,         // Websockets port on MQTT broker
   clientID: "web" + new Date().getTime(),
   connectOpts: {
     // userName: '',
@@ -37,7 +44,7 @@ var options = {
 
 setup("body");
 
-var client = new Paho.MQTT.Client(options.host,options.port,options.clientID);
+var client = new Paho.MQTT.Client(options.host,options.port,'', options.clientID);
 client.onMessageArrived = onMessage;
 client.onconnectionlost = onDisconnect;
 
@@ -55,7 +62,7 @@ function onFailure() {
 client.connect(options.connectOpts);
 
 function onMessage(message) {
-	//console.log(message.topic + "- " + message.payload);
+	// console.log(message.destinationName + "- " + message.payloadString);
 	addNode(message.destinationName, message.payloadString);
 }
 
